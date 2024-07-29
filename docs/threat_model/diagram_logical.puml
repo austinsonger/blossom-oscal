@@ -2,7 +2,7 @@
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Deployment.puml
 
 LAYOUT_WITH_LEGEND()
-title BLOSSOM Logical Architecture Diagram
+title  Logical Architecture Diagram
 
 note as EncryptionNote
 All connections depicted are encrypted with TLS 1.2 unless otherwise noted.
@@ -11,27 +11,27 @@ end note
 Deployment_Node(aws, "NIST-Managed AWS Account", "Amazon Web Services Region") {
         System_Ext("aws_mgmt_api", "AWS Management APIs", "used by Infrastructure-as-Code to provision")
         System_Ext("aws_dns_private", "AWS Private DNS (Route53) and PrivateLink", "used by Infrastructure-as-Code to provision")
-        Deployment_Node(mb_network, "BLOSSOM Managed Blockchain Network", "Managed blockchain components from AWS") {
-            Deployment_Node(mb_endpoints, "AWS Managed Blockchain services and endpoints") {
+        Deployment_Node(mb_network, "Managed Network", "Managed components from AWS") {
+            Deployment_Node(mb_endpoints, "AWS Managed  services and endpoints") {
 
-                System_Ext(mb_ordering_svc, "BLOSSOM Network Ordering Service", "Managed Blockchain endpoint for network ordering service")
+                System_Ext(mb_ordering_svc, "Network Ordering Service", "Managed  endpoint for network ordering service")
 
-                Deployment_Node(mb_member1, "Managed Blockchain Network Member 1") {
-                    System_Ext(mb_member1_ca_svc, "Member Fabric CA Endpoint", "Managed Blockchain endpoint for network ordering service")
+                Deployment_Node(mb_member1, "Managed Network Member 1") {
+                    System_Ext(mb_member1_ca_svc, "Member  CA Endpoint", "Managed  endpoint for network ordering service")
                     Boundary(mb_member1_peernode1, "Managed Peer Node 1 for Member 1") {
                         System_Ext(mb_member1_peernode1_peer_endpoint, "Peer Endpoint")
                         System_Ext(mb_member1_peernode1_event_endpoint, "Peer Event Endpoint")
                     }
                 }
-                Deployment_Node(mb_member2, "Managed Blockchain Network Member 2") {
-                    System_Ext(mb_member2_ca_svc, "Member Fabric CA Endpoint", "Managed Blockchain endpoint for network ordering service")
+                Deployment_Node(mb_member2, "Managed Network Member 2") {
+                    System_Ext(mb_member2_ca_svc, "Member  CA Endpoint", "Managed  endpoint for network ordering service")
                     Boundary(mb_member2_peernode1, "Managed Peer Node 1 for Member 2") {
                         System_Ext(mb_member2_peernode1_peer_endpoint, "Peer Endpoint")
                         System_Ext(mb_member2_peernode1_event_endpoint, "Peer Event Endpoint")
                     }
                 }
-                Deployment_Node(mb_member3, "Managed Blockchain Network Member 3") {
-                    System_Ext(mb_member3_ca_svc, "Member Fabric CA Endpoint", "Managed Blockchain endpoint for network ordering service")
+                Deployment_Node(mb_member3, "Managed Network Member 3") {
+                    System_Ext(mb_member3_ca_svc, "Member CA Endpoint", "Managed  endpoint for network ordering service")
                     Boundary(mb_member3_peernode1, "Managed Peer Node 1 for Member 3") {
                         System_Ext(mb_member3_peernode1_peer_endpoint, "Peer Endpoint")
                         System_Ext(mb_member3_peernode1_event_endpoint, "Peer Event Endpoint")
@@ -40,17 +40,17 @@ Deployment_Node(aws, "NIST-Managed AWS Account", "Amazon Web Services Region") {
             }
         }
 
-        System_Ext(vpce_access_mb, "VPCE for managed network", "Access from BLOSSOM VPC to Managed Blockchain network instance")
+        System_Ext(vpce_access_mb, "VPCfor managed network", "Access from VPC to Managed Network instance")
     
         Boundary(atob, "ATO boundary") {
-            Deployment_Node(mbvpc, "BLOSSOM Development VPC", "AWS VPC with resources supporting Managed Blockchain network") {
+            Deployment_Node(mbvpc, "Development VPC", "AWS VPC with resources supporting Managed Network") {
                 Deployment_Node(mbvpc_infra, "Support Resources", "Supporting resources for Application Interface and DevSecOps tooling") {
                     ContainerDb(s3_app_data, "Application configuration data", "S3", "Stores persistent data for apps")
                     ContainerDb(s3_deploy_data, "Deployment configuration data", "KMS, S3, SSM Parameter Store", "Stores persistent data for apps")
                     ContainerDb(ssm_params, "Deployment configuration items and runtime secrets", "KMS, S3, SSM Parameter Store", "Stores persistent data for apps")
                 }
                 Deployment_Node(asg_app, "Management dashboard app auto-scaling group") {
-                    System(mgmt_app, "application", "BLOSSOM Dashboard Applications")
+                    System(mgmt_app, "application", "Dashboard Applications")
                 }
                 Deployment_Node(asg_member1, "Network Member 1 auto-scaling group") {
                     System(member1_runtime, "member1_runtime", "Docker images and configuration for Member 1 users")
@@ -65,46 +65,46 @@ Deployment_Node(aws, "NIST-Managed AWS Account", "Amazon Web Services Region") {
         }
 }
 
-Person(team, "NIST BLOSSOM Developer")
-Deployment_Node(computer, "Computing Device", "MS Windows, OS X, or Linux running NIST VPN"){
+Person(team, "Developer")
+Deployment_Node(computer, "Computing Device", "MS Windows, OS X, or Linux running VPN"){
     System(browser, "Web Browser", "any modern version")
     System(aws_cli, "aws CLI", "local command for AWS API configuration")
     System(git_cli, "git CLI", "local version control command")
     System(tf_cli, "Terraform CLI", "Terraform CLI Infrastructure-as-Code command")
-    System(vpn_nist_client, "Client for NIST VPN Solution", "All filtered IP traffic, only way to access collab and development services")
+    System(vpn_client, "Client for VPN Solution", "All filtered IP traffic, only way to access collab and development services")
 }
 Rel(team, aws_cli, "uses")
 Rel(team, browser, "uses")
 Rel(team, tf_cli, "uses")
 Rel(team, git_cli, "uses")
-Rel(aws_cli, vpn_nist_client, "tunnels")
-Rel(browser, vpn_nist_client, "tunnels")
-Rel(git_cli, vpn_nist_client, "tunnels")
-Rel(tf_cli, vpn_nist_client, "tunnels")
+Rel(aws_cli, vpn_client, "tunnels")
+Rel(browser, vpn_client, "tunnels")
+Rel(git_cli, vpn_client, "tunnels")
+Rel(tf_cli, vpn_client, "tunnels")
 
-Person(user, "BLOSSOM Network Member User from Agency")
+Person(user, "Network Member User from Agency")
 Deployment_Node(user_computer, "Computing Device", "MS Windows, OS X, or Linux running NIST VPN"){
     System(user_browser, "Web Browser", "any modern version")
-    System(vpn_nist_client_user, "Client for NIST VPN Solution", "All filtered IP traffic, only way to access collab and development services")
+    System(vpn_client_user, "Client for VPN Solution", "All filtered IP traffic, only way to access collab and development services")
 }
 Rel(user, user_browser, "uses")
-Rel(user_browser, vpn_nist_client_user, "tunnels")
+Rel(user_browser, vpn_client_user, "tunnels")
 
-Boundary(nist_saas, "NIST-Authorized External Services") { 
-    Deployment_Node(gsuite, "Azure and Office 365", "Collaboration SaaS, part of NIST GSS") {
-        System(ggroup, "blossom@nist.gov", "Developer email distribution group")
-        System_Ext(secureauth, "NIST ADFS SAML", "SAML Identity Provider")
+Boundary(company_saas, "Company-Authorized External Services") { 
+    Deployment_Node(gsuite, "AWS", "Collaboration SaaS") {
+        System(ggroup, "group@example.com", "Developer email distribution group")
+        System_Ext(secureauth, "Company SAML", "SAML Identity Provider")
     }
     Boundary(deploymentservices, "Deployment Services") {
         System_Ext(dependabot, "GitHub Dependabot", "Dependency analysis SaaS")
         Deployment_Node(github, "GitHub", "VCS SaaS"){
-            System(github_repo, "usnistgov/blossom", "Code repository")
-            System(github_repo, "usnistgov/blossom-dashboard", "Code repository")
-            System(github_repo, "usnistgov/blossom-sam", "Code repository")
+            System(github_repo, "Company/Repo1", "Code repository")
+            System(github_repo, "Company/Repo2", "Code repository")
+            System(github_repo, "Company/Repo3", "Code repository")
         }
     }
     Boundary(securityservices, "Security Services", "VPN and Other Security Services") {
-        System_Ext(vpn_nist, "NIST VPN Solution", "Filtered IP Traffic, All Protocols")
+        System_Ext(vpn_company, "VPN Solution", "Filtered IP Traffic, All Protocols")
     }
 }
 
@@ -120,10 +120,10 @@ Rel(asg_member2, vpce_access_mb, "accesses MB network via", "HTTPS (TCP 443)")
 Rel(asg_member3, vpce_access_mb, "accesses MB network via", "HTTPS (TCP 443)")
 Rel(vpce_access_mb, mb_endpoints, "tunnels traffic to", "HTTPS (TCP 443)")
 ' Deployment automation
-Rel(vpn_nist_client, vpn_nist, "Secure cloud infrastructure access via VPN", "All IP protocols")
-Rel(vpn_nist_client_user, vpn_nist, "Secure cloud infrastructure access via VPN", "All IP protocols")
-Rel(vpn_nist, aws_mgmt_api, "Infrastructure-as-Code stores configuration state in bucket", "HTTPS (TCP 443)")
-Rel(vpn_nist, mgmt_app, "tunnels user requests to dashboard apps", "HTTPS (TCP 443)")
+Rel(vpn_client, vpn_company, "Secure cloud infrastructure access via VPN", "All IP protocols")
+Rel(vpn_client_user, vpn_company, "Secure cloud infrastructure access via VPN", "All IP protocols")
+Rel(vpn_company, aws_mgmt_api, "Infrastructure-as-Code stores configuration state in bucket", "HTTPS (TCP 443)")
+Rel(vpn_company, mgmt_app, "tunnels user requests to dashboard apps", "HTTPS (TCP 443)")
 Rel(aws_mgmt_api, asg_app, "")
 Rel(aws_mgmt_api, asg_member1, "creates")
 Rel(aws_mgmt_api, asg_member2, "creates")
