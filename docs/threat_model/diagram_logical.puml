@@ -8,7 +8,7 @@ note as EncryptionNote
 All connections depicted are encrypted with TLS 1.2 unless otherwise noted.
 end note
 
-Deployment_Node(aws, "NIST-Managed AWS Account", "Amazon Web Services Region") {
+Deployment_Node(aws, "Company-Managed AWS Account", "Amazon Web Services Region") {
         System_Ext("aws_mgmt_api", "AWS Management APIs", "used by Infrastructure-as-Code to provision")
         System_Ext("aws_dns_private", "AWS Private DNS (Route53) and PrivateLink", "used by Infrastructure-as-Code to provision")
         Deployment_Node(mb_network, "Managed Network", "Managed components from AWS") {
