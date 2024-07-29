@@ -8,11 +8,11 @@ note as EncryptionNote
 All connections depicted are encrypted with TLS 1.2 unless otherwise noted.
 end note
 
-Deployment_Node(aws, "Company-Managed AWS Account", "Amazon Web Services Region") {
+Deployment_Node(aws, "CSP-Managed AWS Account", "Amazon Web Services Region") {
         System_Ext("aws_mgmt_api", "AWS Management APIs", "used by Infrastructure-as-Code to provision")
         System_Ext("aws_dns_private", "AWS Private DNS (Route53) and PrivateLink", "used by Infrastructure-as-Code to provision")
         Deployment_Node(mb_network, "Managed Network", "Managed components from AWS") {
-            Deployment_Node(mb_endpoints, "AWS Managed  services and endpoints") {
+            Deployment_Node(mb_endpoints, "AWS Managed services and endpoints") {
 
                 System_Ext(mb_ordering_svc, "Network Ordering Service", "Managed  endpoint for network ordering service")
 
@@ -40,7 +40,7 @@ Deployment_Node(aws, "Company-Managed AWS Account", "Amazon Web Services Region"
             }
         }
 
-        System_Ext(vpce_access_mb, "VPCfor managed network", "Access from VPC to Managed Network instance")
+        System_Ext(vpce_access_mb, "VPC for managed network", "Access from VPC to Managed Network instance")
     
         Boundary(atob, "ATO boundary") {
             Deployment_Node(mbvpc, "Development VPC", "AWS VPC with resources supporting Managed Network") {
@@ -82,15 +82,15 @@ Rel(browser, vpn_client, "tunnels")
 Rel(git_cli, vpn_client, "tunnels")
 Rel(tf_cli, vpn_client, "tunnels")
 
-Person(user, "Network Member User from Agency")
-Deployment_Node(user_computer, "Computing Device", "MS Windows, OS X, or Linux running NIST VPN"){
+Person(user, "Network Member User from Customer")
+Deployment_Node(user_computer, "Computing Device", "MS Windows, OS X, or Linux running Company VPN"){
     System(user_browser, "Web Browser", "any modern version")
-    System(vpn_client_user, "Client for VPN Solution", "All filtered IP traffic, only way to access collab and development services")
+    System(vpn_client_user, "Client for VPN Solution", "All filtered IP traffic")
 }
 Rel(user, user_browser, "uses")
 Rel(user_browser, vpn_client_user, "tunnels")
 
-Boundary(company_saas, "Company-Authorized External Services") { 
+Boundary(company_saas, "CSP-Authorized External Services") { 
     Deployment_Node(gsuite, "AWS", "Collaboration SaaS") {
         System(ggroup, "group@example.com", "Developer email distribution group")
         System_Ext(secureauth, "Company SAML", "SAML Identity Provider")
